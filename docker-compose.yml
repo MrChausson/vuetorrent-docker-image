@@ -2,22 +2,22 @@ version: '3.6'
 services:
     qbittorrent:
         privileged: true
-        build: qbittorrentvpn_mc
+        image: dyonr/qbittorrentvpn
         container_name: qbit
         environment:
             - VPN_ENABLED=yes
-            - VPN_USERNAME=#put your vpn creds here
-            - VPN_PASSWORD=#and here
+            - VPN_TYPE=wireguard
             - NAME_SERVERS=1.1.1.1,8.8.8.8
-            - PUID=1000
-            - PGID=1000
             - TZ=Europe/Paris
             - UMASK_SET=022
-            - WEBUI_PORT=8080
             - LAN_NETWORK=192.168.0.0/24 #Set your lan network subnet
+            - ENABLE_SSL=yes
         volumes:
             - ./config:/config
             - ./downloads:/downloads #chose where you want to store downloaded files
             - ./vuetorrent:/vuetorrent
         ports:
-            - 80888888888       restart: unless-stopped
+            - 8080:8080
+        restart: unless-stopped
+        sysctls:
+            net.ipv6.conf.all.disable_ipv6: 0
